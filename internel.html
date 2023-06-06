@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {
+            background-color: grey;
+        }
+
+        .one {
+            margin-left: 27%;
+            margin-top: 250px;
+            height: 150px;
+            width: 600px;
+            /* background-color:; */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid red;
+
+
+        }
+
+        button {
+            height: 40px;
+            padding-left: 20px;
+            padding-right: 20px;
+            background-image: linear-gradient(blue, red);
+            margin-left: 20px;
+            color: white;
+
+        }
+
+        button:hover {
+            background-image: linear-gradient(purple, red);
+            box-shadow: 2px 10px 10px black;
+
+        }
+
+        input {
+            height: 40px;
+            background-image: linear-gradient(blue, green);
+            padding-left: 10px;
+            border: none;
+            box-shadow: 2px 10px 10px black;
+            color: white;
+
+
+
+
+        }
+
+        input::placeholder {
+            color: white;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="one">
+        <input type="text" name="" id="" placeholder="Ente the name">
+        <button>add</button>
+        <button>update</button>
+        <button>clear</button>
+    </div>
+    <ul></ul>
+    <script>
+        var btnadd = document.querySelectorAll('button')[0]
+        var btnupdate = document.querySelectorAll('button')[1]
+        var btnclear = document.querySelectorAll('button')[2]
+
+
+        var inp = document.querySelector('input')
+        var ul = document.querySelector('ul')
+        btnupdate.style.display = 'none'
+
+        btnadd.addEventListener('click', () => {
+            var mydata = localStorage.getItem('data')
+            if (mydata) {
+                parsdata = JSON.parse(mydata)
+                parsdata.push(inp.value)
+                localStorage.setItem('data', JSON.stringify(parsdata))
+                inp.value = ""
+                show()
+            }
+            else {
+                localStorage.setItem('data', JSON.stringify([inp.value]))
+                inp.value = ""
+                show()
+            }
+        })
+        function show() {
+            ul.innerHTML = ""
+            var mydata = JSON.parse(localStorage.getItem('data'))
+
+            mydata.forEach((ele, index) => {
+                li = document.createElement('li')
+                li.innerHTML = `<h1>${index + 1} ${ele} <button onclick=handleDel(${index})>Del</button> <button onclick=handledit(${index})>edit</button>  </h1>`
+                ul.appendChild(li)
+            });
+
+        }
+        function handleDel(index) { 
+            var deldata = JSON.parse(localStorage.getItem('data'))
+            deldata.splice(index,1)     
+
+
+            localStorage.setItem('data', JSON.stringify(deldata))
+            show()
+
+        }
+        myindex = -1;
+        function handledit(index) {
+            btnupdate.style.display = "block"
+            btnadd.style.display = "none"
+            var mydata = JSON.parse(localStorage.getItem('data'))
+            inp.value = mydata[index]   
+            myindex = index
+            console.log(myindex);
+
+        }
+        btnupdate.addEventListener('click', () => {
+
+            var medata = JSON.parse(localStorage.getItem('data'))
+
+            medata[myindex] = inp.value
+            localStorage.setItem(`data`, JSON.stringify(medata))
+            show()
+            inp.value = ""
+            btnupdate.style.display = "none"
+            btnadd.style.display = "block"
+
+        })
+        btnclear.addEventListener('click', () => {
+
+            localStorage.clear()
+            show()
+
+        })
+    </script>
+</body>
+
+</html>
